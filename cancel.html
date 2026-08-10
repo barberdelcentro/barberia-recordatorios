@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancelar turno - Barber Shop</title>
+    <link rel="stylesheet" href="styles.css?v=20260308-1">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js?v=fix-cb-001"></script>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="corner-decoration corner-tl"></div>
+        <div class="corner-decoration corner-tr"></div>
+        <div class="corner-decoration corner-bl"></div>
+        <div class="corner-decoration corner-br"></div>
+
+        <div class="screen-content">
+            <div class="screen active home-screen">
+                <div class="home-overlay"></div>
+                <div class="cancel-wrapper" style="position:relative; z-index:2;">
+                    <div class="cancel-card">
+                        <h2>Cancelar turno</h2>
+                        <p id="cancel-message" class="cancel-message">Validando información...</p>
+                        <div id="cancel-summary" class="cancel-summary" style="display:none;"></div>
+                        <button id="cancel-confirm-btn" class="btn btn-primary" style="display:none;">Confirmar cancelación</button>
+                        <a href="index.html" class="btn btn-secondary">Volver al inicio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="cancel.js"></script>
+</body>
+</html>

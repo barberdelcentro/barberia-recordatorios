@@ -1,0 +1,27 @@
+name: Setup - Vincular WhatsApp
+
+on:
+  workflow_dispatch:  # solo manual
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        working-directory: ./whatsapp-bot
+        run: npm install
+
+      - name: Generar sesión (escanear QR en los logs)
+        working-directory: ./whatsapp-bot
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: node setup-session.js
+        timeout-minutes: 4

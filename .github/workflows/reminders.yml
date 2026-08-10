@@ -1,0 +1,28 @@
+name: Recordatorios WhatsApp
+
+on:
+  schedule:
+    - cron: '0 11 * * 1-6'  # 8:00 AM Argentina (UTC-3), Lunes a Sábado
+  workflow_dispatch:          # permite ejecutarlo manualmente para probar
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        working-directory: ./whatsapp-bot
+        run: npm install
+
+      - name: Enviar recordatorios
+        working-directory: ./whatsapp-bot
+        env:
+          WA_SESSION:   ${{ secrets.WA_SESSION }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: node send-reminders.js

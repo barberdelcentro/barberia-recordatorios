@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Shop</title>
+    <link rel="stylesheet" href="styles.css?v=20260308-1">
+    <!-- Font Awesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase (Base de Datos) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <div class="phone-container">
+        <!-- Decoraciones de esquinas blancas (del borde) -->
+        <div class="corner-decoration corner-tl"></div>
+        <div class="corner-decoration corner-tr"></div>
+        <div class="corner-decoration corner-bl"></div>
+        <div class="corner-decoration corner-br"></div>
+
+        <div class="screen-content">
+            
+            <!-- PANTALLA 1: INICIO -->
+            <div id="screen-home" class="screen active home-screen">
+                <div class="home-overlay"></div>
+
+                <div class="home-profile">
+                    <div class="home-avatar">
+                        <img src="hombre-logo-icono-barbudo-barberia_66757-249.avif" alt="Logo Barber Del Centro">
+                    </div>
+
+                    <h1 class="home-name">
+                        Barber del Centro
+                        <i class="fa-solid fa-circle-check"></i>
+                    </h1>
+                    <p class="home-bio">Cortes clásicos y modernos.</p>
+                    <p class="home-bio">Afeitado + barba.</p>
+
+                    <div class="home-social">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+
+                    <div class="home-actions">
+                        <button class="btn home-link-btn home-link-btn-primary" onclick="navigateTo('services')">
+                            <i class="fa-solid fa-calendar-check"></i> Reservar turno
+                        </button>
+                        <a class="btn home-link-btn home-link-btn-light" href="mis-turnos.html">
+                            <i class="fa-solid fa-calendar-xmark"></i> Mis turnos / Cancelar
+                        </a>
+                        <a class="btn home-link-btn home-link-btn-light" href="https://wa.me/" target="_blank">
+                            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <a class="btn home-link-btn home-link-btn-light" href="https://instagram.com/" target="_blank">
+                            <i class="fa-brands fa-instagram"></i> Seguinos en Instagram
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANTALLA 2: SERVICIOS -->
+            <div id="screen-services" class="screen services-screen">
+                <div class="header-nav">
+                    <i class="fa-solid fa-chevron-left" onclick="navigateTo('home')" style="cursor: pointer;"></i>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+
+                <h2 class="section-title">ELIGE TU SERVICIO</h2>
+
+                <div class="services-grid">
+                    <div class="service-item" onclick="selectService(this, 'Corte Clásico')">
+                        <i class="fa-solid fa-scissors service-icon"></i>
+                        <span class="service-name">CORTE</span>
+                    </div>
+                    <div class="service-item" onclick="selectService(this, 'Afeitado')">
+                        <i class="fa-solid fa-user-injured service-icon"></i> <!-- Razor icon replacement -->
+                        <span class="service-name">AFEITADO</span>
+                    </div>
+                    <div class="service-item" onclick="selectService(this, 'Barba')">
+                        <i class="fa-solid fa-user-ninja service-icon"></i> <!-- Beard icon replacement -->
+                        <span class="service-name">BARBA</span>
+                    </div>
+                    <div class="service-item" onclick="selectService(this, 'Lavado')">
+                        <i class="fa-solid fa-star service-icon"></i>
+                        <span class="service-name">LAVADO</span>
+                    </div>
+                    <div class="service-item" onclick="selectService(this, 'Peinado')">
+                        <i class="fa-solid fa-broom service-icon"></i> <!-- Brush icon replacement -->
+                        <span class="service-name">PEINADO</span>
+                    </div>
+                    <div class="service-item" onclick="selectService(this, 'Tratamiento')">
+                        <i class="fa-solid fa-flask service-icon"></i>
+                        <span class="service-name">LOCIÓN</span>
+                    </div>
+                </div>
+
+                <div class="section-title" style="border: none; margin-bottom: 5px;">DETALLES</div>
+                <p style="font-size: 10px; color: #888; text-align: center; margin-bottom: 20px;">
+                    Descripción breve del servicio seleccionado.
+                </p>
+
+                <div class="price-list">
+                    <div class="price-row">
+                        <span>CORTE CLÁSICO</span>
+                        <span>$ 20</span>
+                    </div>
+                    <div class="price-row">
+                        <span>AFEITADO COMPLETO</span>
+                        <span>$ 30</span>
+                    </div>
+                    <div class="price-row">
+                        <span>CORTE + BARBA</span>
+                        <span>$ 40</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary flow-cta" onclick="navigateTo('barbers')">CONTINUAR</button>
+            </div>
+
+            <!-- PANTALLA 2.5: SELECCIÓN DE BARBERO -->
+            <div id="screen-barbers" class="screen barbers-screen">
+                <div class="header-nav">
+                    <i class="fa-solid fa-chevron-left" onclick="navigateTo('services')" style="cursor: pointer;"></i>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+
+                <h2 class="section-title">ELIGE TU BARBERO</h2>
+
+                <div class="services-grid" id="barbers-list">
+                    <!-- Se llenará desde la base de datos -->
+                    <div style="grid-column: 1/-1; text-align: center; color: #888;">Cargando barberos...</div>
+                </div>
+
+                <button class="btn btn-primary flow-cta" onclick="navigateTo('calendar')">VER DISPONIBILIDAD</button>
+            </div>
+
+            <!-- PANTALLA 3: CALENDARIO -->
+            <div id="screen-calendar" class="screen calendar-screen">
+                <div class="header-nav">
+                    <i class="fa-solid fa-chevron-left" onclick="navigateTo('barbers')" style="cursor: pointer;"></i>
+                    <div style="font-family: 'Abril Fatface'; font-size: 20px;">BARBERSHOP</div>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <i class="fa-solid fa-moustache" style="font-size: 24px;"></i>
+                </div>
+
+                <div class="calendar-header">
+                    <i class="fa-solid fa-chevron-left"></i>
+                    <span style="font-weight: bold;">SELECCIONA FECHA</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+
+                <div class="calendar-grid" id="calendar-days">
+                    <!-- JS will fill this -->
+                </div>
+
+                <div class="time-section">
+                    <h3 style="font-size: 14px; margin-bottom: 10px;">FECHA SELECCIONADA</h3>
+                    <div class="time-display" id="selected-time-display">--:--</div>
+                    
+                    <div class="time-controls" id="time-slots">
+                        <!-- JS will fill this -->
+                    </div>
+                </div>
+
+                <button class="btn btn-primary flow-cta" onclick="askForDetails()">CONTINUAR</button>
+            </div>
+
+            <!-- PANTALLA 4: DATOS DEL CLIENTE -->
+            <div id="screen-details" class="screen details-screen">
+                <div class="header-nav">
+                    <i class="fa-solid fa-chevron-left" onclick="navigateTo('calendar')"></i>
+                    <div style="font-family: 'Abril Fatface'; font-size: 20px;">TUS DATOS</div>
+                    <div style="width: 20px;"></div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label style="font-size: 12px; color: #aaa;">NOMBRE Y APELLIDO</label>
+                    <input type="text" id="client-name" class="form-input" placeholder="Ej: Juan Pérez">
+                    
+                    <label style="font-size: 12px; color: #aaa; margin-top: 15px; display: block;">CELULAR</label>
+                    <input type="tel" id="client-phone" class="form-input" placeholder="Ej: 11 1234 5678">
+                </div>
+
+                <div class="summary-box" style="background: #111; padding: 15px; border-radius: 10px; margin-top: 30px; border: 1px solid #333;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--accent-blue);">RESUMEN</h3>
+                    <div id="booking-summary" style="font-size: 13px; line-height: 1.6; color: #ccc;">
+                        <!-- JS fills this -->
+                    </div>
+                </div>
+
+                <button class="btn btn-primary flow-cta" onclick="confirmBooking()">CONFIRMAR RESERVA</button>
+            </div>
+
+            <!-- PANTALLA 5: CONFIRMACION -->
+            <div id="screen-success" class="screen success-screen">
+                <div class="success-icon">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h2 class="success-title">Turno reservado</h2>
+                <p id="success-message" class="success-message"></p>
+                <a id="cancel-booking-link" class="btn btn-secondary" style="display:none;" href="#">Cancelar este turno</a>
+                <button class="btn btn-primary" onclick="startNewBooking()">VOLVER AL INICIO</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="supabase-config.js?v=fix-cb-001"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,6 @@
+whatsapp-bot/node_modules/
+whatsapp-bot/wa_auth_setup/
+whatsapp-bot/.github/
+.claude/
+*.py
+INSTRUCCIONES_DB.txt
