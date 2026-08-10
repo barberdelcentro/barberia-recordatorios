@@ -2,7 +2,7 @@ name: Recordatorios WhatsApp
 
 on:
   schedule:
-    - cron: '0 11 * * 1-6'  # 8:00 AM Argentina (UTC-3), Lunes a Sábado
+    - cron: '30 12 * * 1-6'  # 9:30 AM Argentina (UTC-3), Lunes a Sábado
   workflow_dispatch:          # permite ejecutarlo manualmente para probar
 
 jobs:
