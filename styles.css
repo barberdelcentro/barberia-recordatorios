@@ -460,6 +460,10 @@ h1, h2, h3 {
     text-transform: none;
 }
 
+#screen-success .btn-secondary {
+    border-radius: 999px;
+}
+
 .flow-cta {
     position: sticky;
     bottom: 6px;

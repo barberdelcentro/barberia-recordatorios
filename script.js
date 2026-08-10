@@ -384,8 +384,14 @@ async function confirmBooking() {
     const name = document.getElementById("client-name").value.trim();
     const phone = document.getElementById("client-phone").value.trim();
 
-    if (!name || !phone) {
-        alert("Por favor completa tu Nombre y Celular para continuar.");
+    if (!name) {
+        alert("Por favor ingresá tu nombre y apellido.");
+        return;
+    }
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (!phone || phoneDigits.length < 8) {
+        alert("Ingresá un número de celular válido (mínimo 8 dígitos).");
+        document.getElementById("client-phone").focus();
         return;
     }
 
