@@ -22,7 +22,7 @@ jobs:
       - name: Enviar recordatorios
         working-directory: ./whatsapp-bot
         env:
-          WA_SESSION:   ${{ secrets.WA_SESSION }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          REPO_WA:      ${{ secrets.REPO_WA }}
         run: node send-reminders.js

@@ -5,9 +5,21 @@ import pino from 'pino';
 
 const SUPABASE_URL  = process.env.SUPABASE_URL;
 const SUPABASE_KEY  = process.env.SUPABASE_KEY;
+const REPO_WA       = process.env.REPO_WA || '';
 const AUTH_DIR      = '/tmp/wa_auth';
 const COUNTRY_CODE  = '54';
 const BARBERIA_NAME = 'Barber del Centro';
+
+function getSiteUrl() {
+    if (!REPO_WA) return '';
+    const [org, repo] = REPO_WA.split('/');
+    return `https://${org}.github.io/${repo}/`;
+}
+
+function buildCancelToken(id, phone) {
+    const last4 = String(phone || '').replace(/\D/g, '').slice(-4).padStart(4, '0');
+    return Buffer.from(`${id}:${last4}`).toString('base64');
+}
 
 function getTodayARG() {
     const d = new Date().toLocaleString('en-CA', {
@@ -64,13 +76,20 @@ function formatPhone(phone) {
 
 function buildMessage(b) {
     const nombre = b.client_name || 'cliente';
+    const siteUrl = getSiteUrl();
+    let cancelLine = '';
+    if (siteUrl && b.id && b.client_phone) {
+        const token = buildCancelToken(b.id, b.client_phone);
+        cancelLine = `\n\n❌ Si no podés venir, cancelá acá:\n${siteUrl}cancel.html?token=${token}`;
+    }
     return (
         `¡Hola ${nombre}! 👋\n\n` +
         `Te recordamos que hoy tenés turno en *${BARBERIA_NAME}*:\n\n` +
         `🕐 Hora: ${b.time}\n` +
         `✂️ Servicio: ${b.service_name}\n` +
         `👤 Barbero: ${b.barber_name}\n\n` +
-        `¡Te esperamos!`
+        `¡Te esperamos!` +
+        cancelLine
     );
 }
 
