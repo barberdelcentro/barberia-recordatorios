@@ -5,7 +5,6 @@ import pino from 'pino';
 
 const SUPABASE_URL  = process.env.SUPABASE_URL;
 const SUPABASE_KEY  = process.env.SUPABASE_KEY;
-const WA_SESSION    = process.env.WA_SESSION;
 const AUTH_DIR      = '/tmp/wa_auth';
 const COUNTRY_CODE  = '54';
 const BARBERIA_NAME = 'Barber del Centro';
@@ -15,12 +14,17 @@ function getTodayARG() {
         timeZone: 'America/Argentina/Buenos_Aires',
         year: 'numeric', month: '2-digit', day: '2-digit'
     });
-    return d; // formato YYYY-MM-DD
+    return d;
 }
 
-function loadSessionFiles() {
-    if (!WA_SESSION) throw new Error('WA_SESSION no configurada en los Secrets de GitHub.');
-    const files = JSON.parse(Buffer.from(WA_SESSION, 'base64').toString('utf8'));
+async function loadSessionFiles() {
+    const resp = await fetch(`${SUPABASE_URL}/rest/v1/whatsapp_session?id=eq.1&select=session_data`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    const rows = await resp.json();
+    if (!rows.length || !rows[0].session_data)
+        throw new Error('No hay sesión guardada. Escaneá el QR desde el panel admin.');
+    const files = JSON.parse(Buffer.from(rows[0].session_data, 'base64').toString('utf8'));
     mkdirSync(AUTH_DIR, { recursive: true });
     for (const [name, content] of Object.entries(files)) {
         writeFileSync(join(AUTH_DIR, name), content, 'utf8');
@@ -71,7 +75,7 @@ function buildMessage(b) {
 }
 
 async function main() {
-    loadSessionFiles();
+    await loadSessionFiles();
 
     const { version } = await fetchLatestBaileysVersion();
     const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
