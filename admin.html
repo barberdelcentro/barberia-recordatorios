@@ -155,13 +155,6 @@
                         </div>
                         <button id="wa-reconnect-btn" class="btn btn-primary" style="padding: 10px;" onclick="reconnectWhatsapp()">VINCULAR / RECONECTAR</button>
                     </div>
-                    <div style="margin-top: 12px; border-top: 1px solid #222; padding-top: 12px;">
-                        <div style="font-size: 11px; color: #555; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px;">Config GitHub (solo desarrollador)</div>
-                        <input type="password" id="gh-token-input" class="admin-input" placeholder="GitHub Token (actions:write)">
-                        <input type="text" id="gh-repo-input" class="admin-input" placeholder="Repositorio (ej: usuario/barberia-demo)">
-                        <button class="btn btn-secondary" style="padding: 8px; font-size: 12px;" onclick="saveGithubConfig()">GUARDAR</button>
-                        <p style="font-size: 11px; color: #444; margin-top: 6px;">Se guarda solo en este dispositivo.</p>
-                    </div>
                 </div>
 
                 <div id="tab-reportes" class="tab-content" style="display: none;">
@@ -827,23 +820,11 @@
             });
         }
         // ── WhatsApp ──────────────────────────────────────────────
-        const WA_GH_TOKEN_KEY = 'wa_github_token';
-        const WA_GH_REPO_KEY  = 'wa_github_repo';
+        const WA_GH_TOKEN = '__GITHUB_TOKEN__';
+        const WA_GH_REPO  = '__GITHUB_REPO__';
         let waPollingInterval = null;
 
-        function saveGithubConfig() {
-            const token = document.getElementById('gh-token-input').value.trim();
-            const repo  = document.getElementById('gh-repo-input').value.trim();
-            if (!token || !repo) { alert('Completá los dos campos.'); return; }
-            localStorage.setItem(WA_GH_TOKEN_KEY, token);
-            localStorage.setItem(WA_GH_REPO_KEY, repo);
-            document.getElementById('gh-token-input').value = '';
-            alert('Configuración guardada.');
-        }
-
         async function loadWhatsappStatus() {
-            const savedRepo = localStorage.getItem(WA_GH_REPO_KEY);
-            if (savedRepo) document.getElementById('gh-repo-input').value = savedRepo;
 
             try {
                 const { data, error } = await requireSupabase()
@@ -890,11 +871,11 @@
         }
 
         async function reconnectWhatsapp() {
-            const token = localStorage.getItem(WA_GH_TOKEN_KEY);
-            const repo  = localStorage.getItem(WA_GH_REPO_KEY);
+            const token = WA_GH_TOKEN;
+            const repo  = WA_GH_REPO;
 
-            if (!token || !repo) {
-                alert('Primero guardá el GitHub Token y el repositorio en la sección de abajo.');
+            if (!token || !repo || token === '__GITHUB_TOKEN__') {
+                alert('WhatsApp no está configurado. Contactá al soporte.');
                 return;
             }
 
