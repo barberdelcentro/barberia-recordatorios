@@ -54,10 +54,7 @@ async function setup() {
         logger: pino({ level: 'silent' }),
     });
 
-    sock.ev.on('creds.update', async () => {
-        saveCreds();
-        await saveSessionToSupabase();
-    });
+    sock.ev.on('creds.update', saveCreds);
 
     sock.ev.on('connection.update', async ({ connection, lastDisconnect, qr }) => {
         if (qr) {
@@ -75,10 +72,11 @@ async function setup() {
 
         if (connection === 'open') {
             console.log('\n✅ WhatsApp vinculado correctamente!');
+            // Esperar que saveCreds termine de escribir todos los archivos
+            await new Promise(r => setTimeout(r, 5000));
             await saveSessionToSupabase();
             await supabaseUpsert('whatsapp_setup', { qr_code: null, status: 'connected' });
             console.log('✅ Sesión guardada en Supabase. El barbero ya puede recibir recordatorios.');
-            await new Promise(r => setTimeout(r, 3000));
             process.exit(0);
         }
 
