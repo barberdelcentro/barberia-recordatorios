@@ -432,6 +432,8 @@ async function confirmBooking() {
             const token = createCancelToken(insertedBooking.id, phone);
             cancelLink.href = `cancel.html?token=${encodeURIComponent(token)}`;
             cancelLink.style.display = "flex";
+            cancelLink.style.justifyContent = "center";
+            cancelLink.style.alignItems = "center";
             cancelLink.style.borderRadius = "999px";
         }
 
