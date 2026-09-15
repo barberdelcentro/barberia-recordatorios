@@ -2,6 +2,28 @@
 // Ej: "5491112345678" para Argentina. Dejar vacío para no mostrar el botón.
 const WHATSAPP_NUMBER = "";
 
+let CLIENT_CONFIG = {
+    barberiaName: "Barber Shop",
+    primaryColor: "#ff1839",
+    countryCode: "54",
+    horarioApertura: 10,
+    horarioCierre: 20
+};
+
+async function loadClientConfig() {
+    try {
+        const resp = await fetch("client-config.json");
+        CLIENT_CONFIG = await resp.json();
+    } catch (error) {
+        console.error("No se pudo cargar client-config.json, se usan valores por defecto.", error);
+    }
+    document.documentElement.style.setProperty("--primary-color", CLIENT_CONFIG.primaryColor);
+    document.title = CLIENT_CONFIG.barberiaName;
+    document.querySelectorAll("[data-client-name]").forEach((el) => {
+        el.textContent = CLIENT_CONFIG.barberiaName;
+    });
+}
+
 let sbClient = null;
 let supabaseInitError = null;
 
@@ -333,7 +355,7 @@ async function generateTimeSlots() {
         const bookings = await DB.getBookingsByDateBarber(state.date, state.barber.id);
         const takenSlots = bookings.map((b) => b.time);
 
-        for (let h = 10; h <= 20; h++) {
+        for (let h = CLIENT_CONFIG.horarioApertura; h <= CLIENT_CONFIG.horarioCierre; h++) {
             const period = h >= 12 ? "PM" : "AM";
             const displayH = h > 12 ? h - 12 : h;
             const timeString = `${displayH}:00 ${period}`;
@@ -474,6 +496,7 @@ function startCarousel() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    await loadClientConfig();
     try {
         if (!window.hasSupabaseConfig() || !sbClient) {
             alert("Falta configurar Supabase. Editá supabase-config.js con tu URL y anon key.");

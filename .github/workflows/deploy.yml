@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir _site
           cp *.html *.css *.avif _site/ 2>/dev/null || true
-          cp script.js cancel.js mis-turnos.js _site/
+          cp script.js cancel.js mis-turnos.js client-config.json _site/
           node -e "
             const fs = require('fs');
             let c = fs.readFileSync('supabase-config.js', 'utf8');

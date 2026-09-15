@@ -1,14 +1,18 @@
 import makeWASocket, { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion } from '@whiskeysockets/baileys';
-import { writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { writeFileSync, mkdirSync, readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import pino from 'pino';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const CLIENT_CONFIG = JSON.parse(readFileSync(join(__dirname, '..', 'client-config.json'), 'utf8'));
 
 const SUPABASE_URL  = process.env.SUPABASE_URL;
 const SUPABASE_KEY  = process.env.SUPABASE_KEY;
 const REPO_WA       = process.env.REPO_WA || '';
 const AUTH_DIR      = '/tmp/wa_auth';
-const COUNTRY_CODE  = '54';
-const BARBERIA_NAME = 'Barber del Centro';
+const COUNTRY_CODE  = CLIENT_CONFIG.countryCode;
+const BARBERIA_NAME = CLIENT_CONFIG.barberiaName;
 
 function getSiteUrl() {
     if (!REPO_WA) return '';

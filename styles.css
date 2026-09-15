@@ -7,6 +7,7 @@
     --accent-blue: #4444ff;
     --border-width: 12px;
     --soft-gray: #2b2d31;
+    --primary-color: #ff1839;
 }
 
 * {
@@ -246,7 +247,7 @@ h1, h2, h3 {
 }
 
 .home-link-btn-primary {
-    background: #ff1839;
+    background: var(--primary-color);
     color: #fff;
 }
 
@@ -429,8 +430,8 @@ h1, h2, h3 {
 
 #screen-calendar .time-slot:hover,
 #screen-calendar .time-slot.selected {
-    background-color: #ff1839;
-    border-color: #ff1839;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
     color: #fff;
 }
 
@@ -454,7 +455,7 @@ h1, h2, h3 {
 #screen-calendar .btn-primary,
 #screen-details .btn-primary,
 #screen-success .btn-primary {
-    background: #ff1839;
+    background: var(--primary-color);
     color: #fff;
     border-radius: 999px;
     text-transform: none;
@@ -585,7 +586,7 @@ h1, h2, h3 {
 }
 
 .cancel-card .btn-primary {
-    background: #ff1839;
+    background: var(--primary-color);
     color: #fff;
     border-radius: 999px;
     margin-top: 8px;
