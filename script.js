@@ -355,6 +355,11 @@ async function generateTimeSlots() {
         const bookings = await DB.getBookingsByDateBarber(state.date, state.barber.id);
         const takenSlots = bookings.map((b) => b.time);
 
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+        const isToday = state.date === todayStr;
+        const currentHour = now.getHours();
+
         for (let h = CLIENT_CONFIG.horarioApertura; h <= CLIENT_CONFIG.horarioCierre; h++) {
             const period = h >= 12 ? "PM" : "AM";
             const displayH = h > 12 ? h - 12 : h;
@@ -364,7 +369,9 @@ async function generateTimeSlots() {
             slotDiv.className = "time-slot";
             slotDiv.innerText = timeString;
 
-            if (takenSlots.includes(timeString)) {
+            const isPast = isToday && h <= currentHour;
+
+            if (takenSlots.includes(timeString) || isPast) {
                 slotDiv.style.opacity = "0.3";
                 slotDiv.style.textDecoration = "line-through";
                 slotDiv.style.pointerEvents = "none";
